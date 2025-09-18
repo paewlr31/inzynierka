@@ -156,9 +156,18 @@ public class AdminController {
         Optional<Book> bookOpt = bookService.findById(id);
         if (bookOpt.isEmpty()) return "redirect:/admin";
 
-        model.addAttribute("book", bookOpt.get());
+        Book book = bookOpt.get();
+        model.addAttribute("book", book);
+
+        // dodajemy obrazek w Base64
+        if (book.getImage() != null) {
+            String imageBase64 = Base64.getEncoder().encodeToString(book.getImage());
+            model.addAttribute("imageBase64", imageBase64);
+        }
+
         return "delete-book";
     }
+
 
 
     @GetMapping("/books/{id}")
