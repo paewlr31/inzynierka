@@ -21,9 +21,29 @@ aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle 
 <li class="nav-item"><a class="nav-link" th:href="@{/contact}">Contact</a></li>
 </ul>
 <ul class="navbar-nav ml-auto">
-<li class="nav-item"><a class="nav-link" th:href="@{/admin}">Admin</a></li>
-<li class="nav-item"><a class="nav-link" th:href="@{/login}">LogIn</a></li>
+<li class="nav-item"><a class="nav-link admin-link" th:href="@{/admin}">Admin</a></li>
+<li class="nav-item"><a class="nav-link nav-link-login" th:href="@{/login}">LogIn</a></li>
 </ul>
+
+<script>
+fetch('/api/session')
+    .then(res => res.json())
+    .then(json => {
+        if(json.logged) {
+            document.querySelectorAll('.nav-link-login').forEach(el => el.style.display = 'none');
+
+            // pokaż Admin tylko jeśli role == "ADMIN"
+            if(json.role !== 'ADMIN') {
+                document.querySelectorAll('.admin-link').forEach(el => el.style.display = 'none');
+            }
+        } else {
+            // jeśli nie zalogowany, też ukryj admin
+            document.querySelectorAll('.admin-link').forEach(el => el.style.display = 'none');
+        
+        }
+    });
+</script>
+
 </div>
 </nav>
 </header>
