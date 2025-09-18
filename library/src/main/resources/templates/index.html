@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteka - Home</title>
+
+
+<!-- Bootstrap CSS (CDN) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+
+<!-- navbar fragment -->
+<div th:replace="fragments :: navbar"></div>
+
+
+<main class="container py-4">
+<h1>Witamy w bibliotece</h1>
+
+
+<div class="row">
+<div class="col-md-8">
+<section>
+<h2>Polecane książki</h2>
+<p>Brak zawartości — to początek projektu. Kliknij "Books" aby zobaczyć stronę książek.</p>
+</section>
+
+
+<section class="mt-4">
+<h2>Nowości</h2>
+<p>Tu później pojawią się ostatnio dodane książki.</p>
+</section>
+</div>
+
+
+<aside class="col-md-4">
+<div class="list-group">
+<a th:href="@{/books}" class="list-group-item list-group-item-action">Przejdź do Books</a>
+<a th:href="@{/profile}" class="list-group-item list-group-item-action">Profile</a>
+<a th:href="@{/admin}" class="list-group-item list-group-item-action">Admin</a>
+</div>
+</aside>
+</div>
+</main>
+
+
+<!-- Scripts (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

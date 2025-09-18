@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Biblioteka - Books</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+
+<div th:replace="fragments :: navbar"></div>
+
+
+<main class="container py-4">
+<h1>Books</h1>
+
+
+<div th:if="${#lists.isEmpty(books)}">
+<div class="alert alert-info">Brak książek w bazie.</div>
+</div>
+
+
+<div th:if="${!#lists.isEmpty(books)}">
+<div class="list-group">
+<div th:each="book : ${books}" class="list-group-item">
+<h5 th:text="${book.title}">Tytuł</h5>
+<p th:text="${book.author}">Autor</p>
+</div>
+</div>
+</div>
+
+
+<a th:href="@{/}" class="btn btn-secondary mt-3">Powrót</a>
+</main>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>
