@@ -33,12 +33,14 @@
             <a href="#" id="forgot">Nie mam hasła</a>
         </div>
     </div>
+	<div id="reset-area" style="display:none;" class="mt-3">
+	    <h5>Reset hasła</h5>
+	    <input id="reset-email" class="form-control" placeholder="Podaj swój e-mail" />
+	    <input id="reset-new" type="password" class="form-control mt-2" placeholder="Nowe hasło" />
+	    <input id="reset-confirm" type="password" class="form-control mt-2" placeholder="Powtórz nowe hasło" />
+	    <button id="doReset" class="btn btn-warning mt-2">Zmień hasło</button>
+	</div>
 
-    <div id="reset-area" style="display:none;" class="mt-3">
-        <h5>Reset hasła</h5>
-        <input id="reset-email" class="form-control" placeholder="Podaj swój e-mail" />
-        <button id="doReset" class="btn btn-warning mt-2">Wyślij nowy kod (demo)</button>
-    </div>
 </main>
 
 <script>
@@ -68,14 +70,19 @@ document.getElementById('forgot').addEventListener('click', (e)=>{
 
 document.getElementById('doReset').addEventListener('click', async () => {
     const email = document.getElementById('reset-email').value;
-    const res = await fetch('/api/reset', {
+    const newPass = document.getElementById('reset-new').value;
+    const confirm = document.getElementById('reset-confirm').value;
+
+    const res = await fetch('/api/reset-password', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({email})
+        body: JSON.stringify({email, newPassword: newPass, confirmPassword: confirm})
     });
+
     const json = await res.json();
-    if (json.ok) {
-        alert('Nowe hasło (demo): ' + json.newPassword + '\nZaloguj się i zmień hasło.');
+    if(json.ok) {
+        alert(json.message);
+        document.getElementById('reset-area').style.display = 'none';
     } else {
         alert('Błąd: ' + json.error);
     }

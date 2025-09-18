@@ -3,6 +3,8 @@ package com.example.library.controllers;
 import com.example.library.models.User;
 import com.example.library.services.UserService;
 import jakarta.servlet.http.HttpSession;
+
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -85,18 +87,34 @@ public class AuthController {
             return Map.of("ok", false, "error", ex.getMessage());
         }
     }
-
-    @PostMapping("/api/reset")
+    
+    
+    @PostMapping("/api/reset-password")
     @ResponseBody
-    public Map<String,Object> apiReset(@RequestBody Map<String,String> body) {
+    public Map<String,Object> apiResetPassword(@RequestBody Map<String,String> body) {
         String email = body.get("email");
-        if (email == null) return Map.of("ok", false, "error", "Brak e-maila");
-        // prosty reset: w rzeczywistej apce wyślij link; tutaj ustawiamy losowe hasło i zwracamy jako demo
-        String newPass = Long.toHexString(Double.doubleToLongBits(Math.random())).substring(0,8);
-        userService.resetPasswordByEmail(email, newPass);
-        // UWAGA: w produkcji NIE ZWRACAJ hasła w odpowiedzi
-        return Map.of("ok", true, "newPassword", newPass);
+        String newPass = body.get("newPassword");
+        String confirm = body.get("confirmPassword");
+
+        if (email == null || newPass == null || confirm == null)
+            return Map.of("ok", false, "error", "Brak danych");
+
+        if (!newPass.equals(confirm))
+            return Map.of("ok", false, "error", "Nowe hasła nie są zgodne");
+
+        if (newPass.length() < 7)
+            return Map.of("ok", false, "error", "Hasło musi mieć przynajmniej 7 znaków");
+
+        Optional<User> uOpt = userService.findByEmail(email);
+        if (uOpt.isEmpty())
+            return Map.of("ok", false, "error", "Nie ma użytkownika z takim e-mailem");
+
+        userService.changePassword(uOpt.get(), newPass);
+        return Map.of("ok", true, "message", "Hasło zostało zmienione. Zaloguj się nowym hasłem.");
     }
+
+
+
 
     // endpoint do sprawdzania sesji (używane przez JS)
     @GetMapping("/api/session")

@@ -43,35 +43,15 @@ async function checkSession() {
         <p>Rola: ${json.role}</p>
         <div id="user-actions" class="mt-3">
             <button id="logoutBtn" class="btn btn-danger">Wyloguj</button>
-            <button id="changePass" class="btn btn-secondary">Zmień hasło</button>
+           
         </div>
-        <div id="change-pass-form" style="display:none;" class="mt-3">
-            <input id="new-pass" class="form-control mb-2" placeholder="Nowe hasło"/>
-            <button id="do-change" class="btn btn-success">Zmień</button>
-        </div>
+        
     `;
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await fetch('/api/logout', {method: 'POST'});
         location.reload();
     });
-    document.getElementById('changePass').addEventListener('click', () => {
-        document.getElementById('change-pass-form').style.display = 'block';
-    });
-    document.getElementById('do-change')?.addEventListener('click', async () => {
-        const newp = document.getElementById('new-pass').value;
-        if (!newp || newp.length < 5) {
-            alert('Hasło musi mieć min 5 znaków');
-            return;
-        }
-        // wyślij request do api zmiany hasła — tu uproszczone: /api/change (nie zrobione w kontrolerze)
-        // użyjemy endpointu reset (demo) — w docelowej implementacji dodaj dedykowany endpoint
-        const resp = await fetch('/api/reset', {
-            method: 'POST',
-            headers: {'Content-Type':'application/json'},
-            body: JSON.stringify({email: null}) // w real app -> użyj userId
-        });
-        alert('Hasło zostało zmienione (demo).');
-    });
+    
 }
 
 checkSession();
