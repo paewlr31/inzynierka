@@ -1,7 +1,10 @@
 package com.example.library.controllers;
 
 import com.example.library.models.Book;
+import com.example.library.models.User;
 import com.example.library.services.BookService;
+import com.example.library.services.UserService;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,16 +22,17 @@ import java.util.Base64;
 
 @Controller
 public class AdminController {
-
+	private final UserService userService;
     private final BookService bookService;
-    public AdminController(BookService bookService) { this.bookService = bookService; }
-
+    public AdminController(BookService bookService, UserService userService) { this.userService = userService;
+	this.bookService = bookService; }
+    
     @GetMapping("/admin")
     public String adminHome(HttpSession session, Model model) {
         String role = (String) session.getAttribute("role");
         if (!"ADMIN".equals(role)) return "redirect:/";
 
-        List<Book> books = bookService.findAll();
+        List<Book> books = bookService. findAllByCreatedAtDesc();
 
         // przygotowanie Base64 dla każdego obrazka
         Map<Long, String> imagesBase64 = new HashMap<>();
@@ -175,5 +179,39 @@ public class AdminController {
         bookService.findById(id).ifPresent(book -> model.addAttribute("book", book));
         return "book-details";
     }
+    
+    @GetMapping("/admin/users")
+    public String listUsers(HttpSession session, Model model) {
+        String role = (String) session.getAttribute("role");
+        if (!"ADMIN".equals(role)) return "redirect:/";
+
+        List<User> users = userService.findAll(); // potrzebujesz metodę findAll() w UserService
+        model.addAttribute("users", users);
+
+        return "admin-users";
+    }
+    
+    @GetMapping("/admin/delete-user/{id}")
+    public String confirmDeleteUser(@PathVariable Long id, Model model, HttpSession session) {
+        String role = (String) session.getAttribute("role");
+        if (!"ADMIN".equals(role)) return "redirect:/";
+
+        userService.findById(id).ifPresent(user -> model.addAttribute("user", user));
+        return "delete-user"; // nowy widok do potwierdzenia
+    }
+
+    @PostMapping("/admin/delete-user/{id}")
+    public String deleteUser(@PathVariable Long id, HttpSession session) {
+        String role = (String) session.getAttribute("role");
+        if (!"ADMIN".equals(role)) return "redirect:/";
+
+        userService.deleteById(id); // metoda do zaimplementowania w UserService
+        return "redirect:/admin/users";
+    }
+
+
+
+    
+    
 }
 

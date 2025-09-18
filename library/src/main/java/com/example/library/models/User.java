@@ -25,11 +25,10 @@ public class User {
     @Column(nullable = false)
     private String role = "USER"; // "USER" lub "ADMIN"
 
-    // konstruktor bezargumentowy
     public User() {}
 
     // getters / setters
-    // ... wygeneruj w IDE
+  
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

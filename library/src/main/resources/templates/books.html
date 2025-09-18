@@ -9,32 +9,40 @@
 </head>
 <body>
 
-
+<!-- Navbar -->
 <div th:replace="fragments :: navbar"></div>
 
-
 <main class="container py-4">
-<h1>Books</h1>
+    <h1>Books</h1>
 
+    <!-- Jeśli brak książek -->
+    <div th:if="${#lists.isEmpty(books)}">
+        <div class="alert alert-info">Brak książek w bazie.</div>
+    </div>
 
-<div th:if="${#lists.isEmpty(books)}">
-<div class="alert alert-info">Brak książek w bazie.</div>
-</div>
+    <!-- Jeśli są książki -->
+    <div th:if="${!#lists.isEmpty(books)}" class="row">
+        <div class="col-md-4 mb-4" th:each="book : ${books}">
+            <div class="card h-100">
+                <img th:if="${imagesBase64[book.id] != null}" 
+                     th:src="'data:image/png;base64,' + ${imagesBase64[book.id]}" 
+                     class="card-img-top" 
+                     alt="Zdjęcie książki"
+                     style="height: 250px; object-fit: cover;"/>
+                <div class="card-body text-center">
+                    <h5 class="card-title" th:text="${book.title}">Tytuł</h5>
+                    <p class="card-text" th:text="${book.author}">Autor</p>
+                    <p><strong>Data dodania:</strong> 
+                        <span th:text="${#temporals.format(book.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </p>
+                    <a th:href="@{'/books/details/' + ${book.id}}" class="btn btn-info btn-sm">Zobacz</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-<div th:if="${!#lists.isEmpty(books)}">
-<div class="list-group">
-<div th:each="book : ${books}" class="list-group-item">
-<h5 th:text="${book.title}">Tytuł</h5>
-<p th:text="${book.author}">Autor</p>
-</div>
-</div>
-</div>
-
-
-<a th:href="@{/}" class="btn btn-secondary mt-3">Powrót</a>
+    <a th:href="@{/}" class="btn btn-secondary mt-3">Powrót</a>
 </main>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>

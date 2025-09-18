@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista użytkowników</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container py-4">
+    <h1>Użytkownicy</h1>
+    <a href="/admin" class="btn btn-secondary mb-3">Powrót do panelu admina</a>
+    
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Nazwa wyświetlana</th>
+                <th>Rola</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.userName}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.displayName}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <!-- Przycisk Usuń -->
+                    <a th:href="@{'/admin/delete-user/' + ${user.id}}" class="btn btn-danger btn-sm">Usuń</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -20,6 +20,15 @@ public class BookService {
     public Book addBook(Book book) { return bookRepository.save(book); }
 
     public List<Book> findAll() { return bookRepository.findAll(); }
+    
+    public List<Book> findAllByCreatedAtAsc() {
+        return bookRepository.findAllByOrderByCreatedAtAsc();
+    }
+
+    public List<Book> findAllByCreatedAtDesc() {
+        return bookRepository.findAllByOrderByCreatedAtDesc();
+    }
+
 
     public Optional<Book> findById(Long id) { return bookRepository.findById(id); }
 

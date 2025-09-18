@@ -5,6 +5,7 @@ import com.example.library.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,14 @@ public class UserService {
     }
 
     
+  
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
+    }
+
    
 
 

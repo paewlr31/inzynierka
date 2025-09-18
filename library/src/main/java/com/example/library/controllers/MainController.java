@@ -19,12 +19,11 @@ return "index"; // src/main/resources/templates/index.html
 }
 
 
-@GetMapping("/books")
-public String books(Model model) {
-// na start pusty list (później podmienisz na repozytorium z DB)
-model.addAttribute("books", Collections.emptyList());
-return "books";
-}
+/*
+ * @GetMapping("/books") public String books(Model model) { // na start pusty
+ * list (później podmienisz na repozytorium z DB) model.addAttribute("books",
+ * Collections.emptyList()); return "books"; }
+ */
 
 
 /*
