@@ -1,0 +1,10 @@
+<h1>Dodaj książkę</h1>
+<form method="post" th:action="@{/admin/add-book}" enctype="multipart/form-data">
+    <input name="title" placeholder="Tytuł" class="form-control mb-2" required />
+    <input name="author" placeholder="Autor" class="form-control mb-2" required />
+    <input type="number" name="quantity" placeholder="Ilość" class="form-control mb-2" required />
+    <input type="number" name="year" placeholder="Rok wydania" class="form-control mb-2" />
+    <textarea name="description" placeholder="Opis" class="form-control mb-2"></textarea>
+    <input type="file" name="image" class="form-control mb-2" />
+    <button class="btn btn-primary">Dodaj</button>
+</form>

@@ -11,7 +11,30 @@
 <div th:replace="fragments :: navbar"></div>
 <main class="container py-4">
 <h1>Admin</h1>
-<p>Tu będzie Admin</p>
+<h2>Admin - książki</h2>
+<a href="/admin/add-book" class="btn btn-success mb-3">Dodaj książkę</a>
+
+<div class="row">
+    <div class="col-md-4 mb-4" th:each="book : ${books}">
+        <div class="card h-100">
+            <img th:if="${imagesBase64[book.id] != null}" 
+                 th:src="'data:image/png;base64,' + ${imagesBase64[book.id]}" 
+                 class="card-img-top" 
+                 alt="Zdjęcie książki"
+                 style="height: 250px; object-fit: cover;"/>
+            <div class="card-body text-center">
+                <h5 class="card-title" th:text="${book.title}">Tytuł</h5>
+                <p class="card-text" th:text="${book.author}">Autor</p>
+                <a th:href="@{'/admin/edit-book/' + ${book.id}}" class="btn btn-primary btn-sm">Edytuj</a>
+                <a th:href="@{'/admin/delete-book/' + ${book.id}}" class="btn btn-danger btn-sm">Usuń</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
