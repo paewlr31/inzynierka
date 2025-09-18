@@ -48,6 +48,9 @@
     <p><strong>Opis:</strong> <span th:text="${book.description}"></span></p>
     <p><strong>Ilość:</strong> <span th:text="${book.quantity}"></span></p>
     <p><strong>Rok:</strong> <span th:text="${book.year}"></span></p>
+      <p><strong>Data dodania:</strong> 
+				   <span th:text="${#temporals.format(book.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
+				</p>
 
       <div th:if="${imageBase64 != null}">
 	    <img th:src="'data:image/png;base64,' + ${imageBase64}" style="width:150px;" alt="Obecne zdjęcie"/>

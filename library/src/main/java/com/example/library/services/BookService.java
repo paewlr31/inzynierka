@@ -2,8 +2,12 @@ package com.example.library.services;
 
 import com.example.library.models.Book;
 import com.example.library.repository.BookRepository;
+
+import jakarta.persistence.PrePersist;
+
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +24,6 @@ public class BookService {
     public Optional<Book> findById(Long id) { return bookRepository.findById(id); }
 
     public void deleteBook(Long id) { bookRepository.deleteById(id); }
+    
+   
 }

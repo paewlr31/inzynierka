@@ -1,5 +1,7 @@
 package com.example.library.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 @Entity
 @Table(name = "book")
@@ -27,8 +29,16 @@ public class Book {
     @Lob
     @Column(name = "image", nullable = true)
     private byte[] image; // obrazek w bazie danych
+    
+    private LocalDateTime createdAt;
 
     public Book() {}
+    
+    
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
     // getters / setters
     public Long getId() { return id; }
@@ -45,6 +55,7 @@ public class Book {
     public void setYear(Integer year) { this.year = year; }
     public byte[] getImage() { return image; }
     public void setImage(byte[] image) { this.image = image; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
     
     
 }
