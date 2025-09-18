@@ -27,10 +27,9 @@ return "books";
 }
 
 
-@GetMapping("/profile")
-public String profile() {
-return "profile";
-}
+/*
+ * @GetMapping("/myprofile") public String profile() { return "profile"; }
+ */
 
 
 @GetMapping("/about")
@@ -50,15 +49,12 @@ public String admin() {
 return "admin";
 }
 
-
-@GetMapping("/login")
-public String login() {
-return "login";
-}
+/*
+ * @GetMapping("/login") public String login() { return "login"; }
+ */
 
 
-@GetMapping("/register")
-public String register() {
-return "register";
-}
+/*
+ * @GetMapping("/register") public String register() { return "register"; }
+ */
 }

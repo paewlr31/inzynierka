@@ -10,9 +10,39 @@
 <body>
 <div th:replace="fragments :: navbar"></div>
 <main class="container py-4">
-<h1>Register</h1>
-<p>Tu będzie register</p>
+    <h1>Rejestracja</h1>
+    <div id="msg"></div>
+    <div style="max-width:480px;">
+        <input id="r-user" class="form-control mb-2" placeholder="Nazwa użytkownika" />
+        <input id="r-email" class="form-control mb-2" placeholder="E-mail" />
+        <input id="r-display" class="form-control mb-2" placeholder="Imię (opcjonalnie)" />
+        <input id="r-pass" type="password" class="form-control mb-2" placeholder="Hasło" />
+        <button id="doRegister" class="btn btn-success">Zarejestruj</button>
+    </div>
 </main>
+
+<script>
+document.getElementById('doRegister').addEventListener('click', async () => {
+    const user = document.getElementById('r-user').value;
+    const email = document.getElementById('r-email').value;
+    const displayName = document.getElementById('r-display').value;
+    const password = document.getElementById('r-pass').value;
+    const res = await fetch('/api/register', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({user, password, email, displayName})
+    });
+    const json = await res.json();
+    const msg = document.getElementById('msg');
+    if (json.ok) {
+        msg.innerHTML = '<div class="alert alert-success">Zarejestrowano. Przekierowanie...</div>';
+        setTimeout(()=>location.href='/profile', 700);
+    } else {
+        msg.innerHTML = '<div class="alert alert-danger">'+json.error+'</div>';
+    }
+});
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>

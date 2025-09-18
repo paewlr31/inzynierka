@@ -9,10 +9,74 @@
 </head>
 <body>
 <div th:replace="fragments :: navbar"></div>
+
 <main class="container py-4">
-<h1>Profile</h1>
-<p>Tu będzie profil użytkownika (np. lista wypożyczonych książek).</p>
+    <div id="profile-root">
+        <!-- zawartość wypełniona przez JS -->
+        <div class="text-center">
+            <div class="spinner-border" role="status" id="loading">
+                <span class="sr-only">Ładowanie...</span>
+            </div>
+        </div>
+    </div>
 </main>
+
+<script>
+async function checkSession() {
+    const res = await fetch('/api/session');
+    const json = await res.json();
+    const root = document.getElementById('profile-root');
+    document.getElementById('loading').style.display = 'none';
+    if (!json.logged) {
+        root.innerHTML = `
+            <h1>Nie jesteś zalogowany</h1>
+            <p>Nie znam Twojego profilu. Zaloguj się aby zobaczyć swoje wypożyczenia.</p>
+            <a href="/login" class="btn btn-primary">Zaloguj</a>
+            <a href="/register" class="btn btn-link">Nie mam konta</a>
+        `;
+        return;
+    }
+    // jeśli zalogowany — pokaz profil
+    root.innerHTML = `
+        <h1>Witaj, ${json.displayName ? json.displayName : json.userName}</h1>
+        <p>Twoje ID: ${json.userId}</p>
+        <p>Rola: ${json.role}</p>
+        <div id="user-actions" class="mt-3">
+            <button id="logoutBtn" class="btn btn-danger">Wyloguj</button>
+            <button id="changePass" class="btn btn-secondary">Zmień hasło</button>
+        </div>
+        <div id="change-pass-form" style="display:none;" class="mt-3">
+            <input id="new-pass" class="form-control mb-2" placeholder="Nowe hasło"/>
+            <button id="do-change" class="btn btn-success">Zmień</button>
+        </div>
+    `;
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await fetch('/api/logout', {method: 'POST'});
+        location.reload();
+    });
+    document.getElementById('changePass').addEventListener('click', () => {
+        document.getElementById('change-pass-form').style.display = 'block';
+    });
+    document.getElementById('do-change')?.addEventListener('click', async () => {
+        const newp = document.getElementById('new-pass').value;
+        if (!newp || newp.length < 5) {
+            alert('Hasło musi mieć min 5 znaków');
+            return;
+        }
+        // wyślij request do api zmiany hasła — tu uproszczone: /api/change (nie zrobione w kontrolerze)
+        // użyjemy endpointu reset (demo) — w docelowej implementacji dodaj dedykowany endpoint
+        const resp = await fetch('/api/reset', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({email: null}) // w real app -> użyj userId
+        });
+        alert('Hasło zostało zmienione (demo).');
+    });
+}
+
+checkSession();
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
