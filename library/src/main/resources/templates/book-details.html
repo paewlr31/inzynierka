@@ -60,14 +60,21 @@
   
 
     <div class="actions">
-        <!-- Wypożyczenie książki -->
-        <form th:action="@{'/books/borrow/' + ${book.id}}" method="post" style="display:inline;">
-            <button type="submit" class="borrow">📚 Wypożycz</button>
-        </form>
+    <!-- Wypożyczenie książki -->
+    <form th:action="@{'/books/borrow/' + ${book.id}}" method="post" style="display:inline;">
+        <button type="submit" class="borrow"
+                th:disabled="${book.quantity == 0}">📚 Wypożycz</button>
+    </form>
 
-        <!-- Powrót -->
-        <a href="/books" class="back">⬅ Powrót</a>
-    </div>
+    <!-- Komunikat jeśli brak książek -->
+    <span th:if="${book.quantity == 0}" style="color:red; margin-left:10px;">
+        Brak dostępnych egzemplarzy
+    </span>
+
+    <!-- Powrót -->
+    <a href="/books" class="back">⬅ Powrót</a>
+</div>
+    
 </div>
 </body>
 </html>

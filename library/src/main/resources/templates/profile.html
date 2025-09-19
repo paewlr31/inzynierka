@@ -6,13 +6,18 @@
 <title>Profile</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
 <link rel="stylesheet" th:href="@{/css/style.css}" />
+<style>
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+</style>
 </head>
 <body>
 <div th:replace="fragments :: navbar"></div>
 
 <main class="container py-4">
     <div id="profile-root">
-        <!-- zawartość wypełniona przez JS -->
         <div class="text-center">
             <div class="spinner-border" role="status" id="loading">
                 <span class="sr-only">Ładowanie...</span>
@@ -27,6 +32,7 @@ async function checkSession() {
     const json = await res.json();
     const root = document.getElementById('profile-root');
     document.getElementById('loading').style.display = 'none';
+
     if (!json.logged) {
         root.innerHTML = `
             <h1>Nie jesteś zalogowany</h1>
@@ -36,22 +42,49 @@ async function checkSession() {
         `;
         return;
     }
-    // jeśli zalogowany — pokaz profil
+
+    // Wyświetlenie informacji o użytkowniku
     root.innerHTML = `
         <h1>Witaj, ${json.displayName ? json.displayName : json.userName}</h1>
         <p>Twoje ID: ${json.userId}</p>
         <p>Rola: ${json.role}</p>
         <div id="user-actions" class="mt-3">
             <button id="logoutBtn" class="btn btn-danger">Wyloguj</button>
-           
         </div>
-        
+
+        <h3 class="mt-4">Twoje wypożyczone książki</h3>
+        <div id="borrowed-books" class="row"></div>
     `;
+
     document.getElementById('logoutBtn').addEventListener('click', async () => {
         await fetch('/api/logout', {method: 'POST'});
         location.reload();
     });
-    
+
+    // Pobranie listy wypożyczonych książek
+    const booksRes = await fetch('/api/profile/borrowed');
+    const books = await booksRes.json();
+    const booksDiv = document.getElementById('borrowed-books');
+
+    if (books.length === 0) {
+        booksDiv.innerHTML = `<p>Nie masz aktualnie wypożyczonych książek.</p>`;
+    } else {
+        booksDiv.innerHTML = books.map(book => `
+            <div class="col-md-4 mb-3">
+                <div class="card h-100 text-center">
+                    ${book.image ? `<img src="data:image/png;base64,${book.image}" class="card-img-top" alt="Okładka książki" />` : ''}
+                    <div class="card-body">
+                        <h5 class="card-title">${book.title}</h5>
+                        <p class="card-text">${book.author}</p>
+                        <p><strong>Gatunek:</strong> ${book.genre}</p>
+                        <p><strong>Wypożyczono:</strong> ${new Date(book.borrowedAt).toLocaleDateString()}</p>
+                        <p><strong>Termin oddania:</strong> ${new Date(book.dueAt).toLocaleDateString()}</p>
+                        <a href="/books/details/${book.id}" class="btn btn-info btn-sm">Zobacz</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
 }
 
 checkSession();
