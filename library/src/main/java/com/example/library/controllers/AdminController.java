@@ -1,6 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.models.Book;
+import com.example.library.models.Genre;
 import com.example.library.models.User;
 import com.example.library.services.BookService;
 import com.example.library.services.UserService;
@@ -62,6 +63,7 @@ public class AdminController {
                                 @RequestParam int quantity,
                                 @RequestParam String description,
                                 @RequestParam(required = false) Integer year,
+                                @RequestParam Genre genre,
                                 @RequestParam("image") MultipartFile image,
                                 HttpSession session) throws IOException {
         String role = (String) session.getAttribute("role");
@@ -72,6 +74,7 @@ public class AdminController {
         b.setAuthor(author);
         b.setQuantity(quantity);
         b.setDescription(description);
+        b.setGenre(genre);
         b.setYear(year);
 
         // zapis obrazka w bazie
@@ -110,6 +113,7 @@ public class AdminController {
                                 @RequestParam int quantity,
                                 @RequestParam String description,
                                 @RequestParam(required = false) Integer year,
+                                @RequestParam Genre genre,
                                 @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
                                 HttpSession session) throws IOException {
         String role = (String) session.getAttribute("role");
@@ -125,6 +129,7 @@ public class AdminController {
             book.setAuthor(author);
             book.setQuantity(quantity);
             book.setDescription(description);
+            book.setGenre(genre);
             book.setYear(year);
             
             // Aktualizuj obrazek TYLKO jeśli przesłano nowy

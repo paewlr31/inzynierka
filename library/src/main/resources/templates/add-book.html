@@ -5,6 +5,18 @@
     <input type="number" name="quantity" placeholder="Ilość" class="form-control mb-2" required />
     <input type="number" name="year" placeholder="Rok wydania" class="form-control mb-2" />
     <textarea name="description" placeholder="Opis" class="form-control mb-2"></textarea>
+ 	<div class="form-group">
+    <label>Rodzaj książki (Genre)</label>
+	    <select name="genre" class="form-control" required>
+	        <option th:each="g : ${T(com.example.library.models.Genre).values()}"
+	                th:value="${g}"
+	                th:text="${g}">
+	        </option>
+	    </select>
+	</div>
+ 	
     <input type="file" name="image" class="form-control mb-2" />
+    
+  
     <button class="btn btn-primary">Dodaj</button>
 </form>

@@ -25,6 +25,10 @@ public class Book {
 
     @Column(nullable = true)
     private Integer year;
+    
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Genre genre;
 
     @Lob
     @Column(name = "image", nullable = true)
@@ -56,6 +60,9 @@ public class Book {
     public byte[] getImage() { return image; }
     public void setImage(byte[] image) { this.image = image; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public Genre getGenre() { return genre; }
+    public void setGenre(Genre genre) { this.genre = genre; }
+
     
     
 }

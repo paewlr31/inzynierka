@@ -48,6 +48,8 @@
     <p><strong>Opis:</strong> <span th:text="${book.description}"></span></p>
     <p><strong>Ilość:</strong> <span th:text="${book.quantity}"></span></p>
     <p><strong>Rok:</strong> <span th:text="${book.year}"></span></p>
+    <p><strong>Gatunek:</strong> <span th:text="${book.genre}"></span></p>
+    
       <p><strong>Data dodania:</strong> 
 				   <span th:text="${#temporals.format(book.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
 				</p>
