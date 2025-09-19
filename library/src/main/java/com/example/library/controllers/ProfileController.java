@@ -1,9 +1,13 @@
 package com.example.library.controllers;
 
+import com.example.library.models.Book;
 import com.example.library.models.BorrowedBook;
 import com.example.library.models.User;
 import com.example.library.repository.BorrowedRepository;
 import com.example.library.repository.UserRepository;
+
+import org.springframework.ui.Model;
+
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,24 @@ public class ProfileController {
                              UserRepository userRepository) {
         this.borrowedRepository = borrowedRepository;
         this.userRepository = userRepository;
+    }
+    @GetMapping("/books/borrowed/{borrowId}")
+    public String borrowedBookDetails(@PathVariable Long borrowId, Model model) {
+        BorrowedBook borrowed = borrowedRepository.findById(borrowId)
+                .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono wypożyczenia o ID: " + borrowId));
+
+        Book book = borrowed.getBook();
+        String imageBase64 = null;
+        if (book.getImage() != null) {
+            imageBase64 = Base64.getEncoder().encodeToString(book.getImage());
+        }
+
+        model.addAttribute("book", book);
+        model.addAttribute("borrowId", borrowed.getId());
+        model.addAttribute("imageBase64", imageBase64);
+        model.addAttribute("dueAt", borrowed.getBorrowedAt().plusDays(60)); // termin 60 dni
+
+        return "borrowed-book-details"; // nowy html
     }
 
     @GetMapping("/borrowed")
