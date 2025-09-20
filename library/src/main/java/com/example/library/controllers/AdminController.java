@@ -1,8 +1,10 @@
 package com.example.library.controllers;
 
 import com.example.library.models.Book;
+import com.example.library.models.BorrowedBook;
 import com.example.library.models.Genre;
 import com.example.library.models.User;
+import com.example.library.repository.BorrowedRepository;
 import com.example.library.services.BookService;
 import com.example.library.services.UserService;
 
@@ -19,14 +21,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.Base64;
 
 @Controller
 public class AdminController {
 	private final UserService userService;
     private final BookService bookService;
-    public AdminController(BookService bookService, UserService userService) { this.userService = userService;
-	this.bookService = bookService; }
+    private final BorrowedRepository borrowedRepository;
+    public AdminController(BookService bookService, UserService userService, BorrowedRepository borrowedRepository) { 
+    	this.userService = userService;
+	this.bookService = bookService; 
+	 this.borrowedRepository = borrowedRepository;
+    }
     
     @GetMapping("/admin")
     public String adminHome(HttpSession session, Model model) {
@@ -212,6 +219,53 @@ public class AdminController {
 
         userService.deleteById(id); // metoda do zaimplementowania w UserService
         return "redirect:/admin/users";
+    }
+    
+    @GetMapping("/admin/borrowed-users")
+    public String borrowedUsers(Model model) {
+        // pobieramy wszystkie wypożyczenia
+        List<BorrowedBook> borrowedBooks = borrowedRepository.findAll();
+
+        // grupujemy po użytkowniku
+        Map<User, List<BorrowedBook>> borrowedByUser = borrowedBooks.stream()
+                .collect(Collectors.groupingBy(BorrowedBook::getUser));
+
+        model.addAttribute("borrowedByUser", borrowedByUser);
+        return "admin-borrowed-users"; // nowy HTML
+    }
+    
+    @GetMapping("/admin/approve-return/{borrowedId}")
+    public String approveReturnForm(@PathVariable Long borrowedId, HttpSession session, Model model) {
+        String role = (String) session.getAttribute("role");
+        if (!"ADMIN".equals(role)) return "redirect:/";
+
+        Optional<BorrowedBook> borrowedBookOpt = borrowedRepository.findById(borrowedId);
+        if (borrowedBookOpt.isEmpty()) return "redirect:/admin/borrowed-users";
+
+        BorrowedBook borrowedBook = borrowedBookOpt.get();
+        model.addAttribute("borrowedBook", borrowedBook);
+
+        return "approve-return"; // nowy widok HTML
+    }
+
+    @PostMapping("/admin/approve-return/{borrowedId}")
+    public String approveReturnSubmit(@PathVariable Long borrowedId, HttpSession session) {
+        String role = (String) session.getAttribute("role");
+        if (!"ADMIN".equals(role)) return "redirect:/";
+
+        Optional<BorrowedBook> borrowedBookOpt = borrowedRepository.findById(borrowedId);
+        if (borrowedBookOpt.isPresent()) {
+            BorrowedBook borrowedBook = borrowedBookOpt.get();
+            
+            // zwiększamy quantity książki
+            Book book = borrowedBook.getBook();
+            book.setQuantity(book.getQuantity() + 1);
+            bookService.addBook(book); // zapisujemy zmianę w bazie
+            
+            borrowedRepository.delete(borrowedBook); // usuń wypożyczenie – książka zwrócona
+        }
+
+        return "redirect:/admin/borrowed-users";
     }
 
 

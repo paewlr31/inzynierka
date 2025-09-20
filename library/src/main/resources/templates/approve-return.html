@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Zatwierdź zwrot książki</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container py-4">
+    <h1>Zatwierdź zwrot książki</h1>
+    <a href="/admin/borrowed-users" class="btn btn-secondary mb-3">Powrót do listy wypożyczeń</a>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${borrowedBook.book.title}"></h5>
+            <p class="card-text"><strong>Autor:</strong> <span th:text="${borrowedBook.book.author}"></span></p>
+            <p class="card-text"><strong>Użytkownik:</strong> <span th:text="${borrowedBook.user.displayName} + ' (' + ${borrowedBook.user.userName} + ')'"></span></p>
+            <p class="card-text"><strong>Data wypożyczenia:</strong> <span th:text="${#temporals.format(borrowedBook.borrowedAt, 'yyyy-MM-dd')}"></span></p>
+            <p class="card-text"><strong>Termin oddania:</strong> <span th:text="${#temporals.format(borrowedBook.dueAt, 'yyyy-MM-dd')}"></span></p>
+            <p class="card-text"><strong>Przedłużone:</strong> <span th:text="${borrowedBook.extensionUsed} ? 'Tak' : 'Nie'"></span></p>
+
+            <form th:action="@{'/admin/approve-return/' + ${borrowedBook.id}}" method="post">
+                <button type="submit" class="btn btn-success">Zatwierdź zwrot</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>

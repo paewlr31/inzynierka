@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy z wypożyczeniami</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container py-4">
+    <h1>Użytkownicy z wypożyczeniami</h1>
+    <a href="/admin" class="btn btn-secondary mb-3">Powrót do panelu admina</a>
+
+    <div th:each="entry : ${borrowedByUser}">
+        <h3 th:text="'Użytkownik: ' + ${entry.key.displayName} + ' (' + ${entry.key.userName} + ')'"></h3>
+        <table class="table table-bordered table-striped mb-4">
+            <thead>
+                <tr>
+                    <th>ID Wypożyczenia</th>
+                    <th>Tytuł książki</th>
+                    <th>Autor</th>
+                    <th>Data wypożyczenia</th>
+                    <th>Termin oddania</th>
+                    <th>Przedłużone?</th>
+                    <th>Oddanie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="borrowedBook : ${entry.value}">
+                    <td th:text="${borrowedBook.id}"></td>
+                    <td th:text="${borrowedBook.book.title}"></td>
+                    <td th:text="${borrowedBook.book.author}"></td>
+                    <td th:text="${#temporals.format(borrowedBook.borrowedAt, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${#temporals.format(borrowedBook.dueAt, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${borrowedBook.extensionUsed} ? 'Tak' : 'Nie'"></td>
+                    <td>
+				        <a th:href="@{'/admin/approve-return/' + ${borrowedBook.id}}" class="btn btn-success btn-sm">Zatwierdź zwrot</a>
+				    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+</body>
+</html>
