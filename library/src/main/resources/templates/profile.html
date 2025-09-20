@@ -79,7 +79,7 @@ async function checkSession() {
                         <p><strong>Gatunek:</strong> ${book.genre}</p>
                         <p><strong>Wypożyczono:</strong> ${new Date(book.borrowedAt).toLocaleDateString()}</p>
                         <p><strong>Termin oddania:</strong> ${new Date(book.dueAt).toLocaleDateString()}</p>
-                        <a href="/books/borrowed/${book.id}" class="btn btn-warning btn-sm">🔄 Szczegóły / Przedłuż</a>
+                        <a href="/books/borrowed/${book.borrowId}" class="btn btn-warning btn-sm">🔄 Szczegóły / Przedłuż</a>
                         
                     </div>
                 </div>

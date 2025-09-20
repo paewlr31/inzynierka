@@ -21,6 +21,8 @@
     <p><strong>Tytuł:</strong> <span th:text="${book.title}"></span></p>
     <p><strong>Autor:</strong> <span th:text="${book.author}"></span></p>
     <p><strong>Gatunek:</strong> <span th:text="${book.genre}"></span></p>
+<p><strong>ID POZYCZENIA:</strong> <span th:text="${borrowId}"></span></p>
+
    <p><strong>Data wypożyczenia:</strong> <span th:text="${#temporals.format(borrowedAt, 'yyyy-MM-dd')}"></span></p>
 	<p><strong>Termin oddania:</strong> <span th:text="${#temporals.format(dueAt, 'yyyy-MM-dd')}"></span></p>
    

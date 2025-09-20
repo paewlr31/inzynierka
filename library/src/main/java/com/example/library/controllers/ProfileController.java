@@ -65,6 +65,7 @@ public class ProfileController {
         return borrowedList.stream().map(borrowedBook -> {
             var book = borrowedBook.getBook();
             Map<String, Object> map = new HashMap<>();
+            map.put("borrowId", borrowedBook.getId());
             map.put("id", book.getId());
             map.put("title", book.getTitle());
             map.put("author", book.getAuthor());

@@ -6,8 +6,10 @@ import com.example.library.repository.BorrowedRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Base64;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/books")
@@ -38,4 +40,29 @@ public class BorrowedBookController {
 
         return "borrowed-book-details"; // Twój HTML z przyciskiem Przedłuż
     }
+    
+
+    @PostMapping("/extend/{borrowId}")
+    public String extendBook(@PathVariable Long borrowId, RedirectAttributes redirectAttributes) {
+        Optional<BorrowedBook> borrowedBookOpt = borrowedRepository.findById(borrowId);
+
+        if (borrowedBookOpt.isPresent()) {
+            BorrowedBook borrowedBook = borrowedBookOpt.get();
+
+            if (borrowedBook.isExtensionUsed()) {
+                redirectAttributes.addFlashAttribute("error", "Nie możesz przedłużyć tej książki więcej niż raz.");
+            } else {
+                // przedłużenie o 7 dni od obecnego dueAt
+                borrowedBook.setDueAt(borrowedBook.getDueAt().plusDays(7));
+                borrowedBook.setExtensionUsed(true);
+                borrowedRepository.save(borrowedBook);
+                redirectAttributes.addFlashAttribute("success", "Wypożyczenie zostało przedłużone o 7 dni.");
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Nie znaleziono wypożyczenia o podanym ID.");
+        }
+
+        return "redirect:/books/borrowed/" + borrowId;
+    }
+
 }

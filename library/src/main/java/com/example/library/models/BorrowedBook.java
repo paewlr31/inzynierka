@@ -15,6 +15,9 @@ public class BorrowedBook {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    
+    @Column(nullable = false)
+    private LocalDateTime dueAt;
 
     // jaka książka
     @ManyToOne
@@ -23,6 +26,9 @@ public class BorrowedBook {
 
     @Column(nullable = false)
     private LocalDateTime borrowedAt;
+    
+    @Column(nullable = false)
+    private boolean extensionUsed = false;
 
     public BorrowedBook() {}
 
@@ -30,9 +36,12 @@ public class BorrowedBook {
         this.user = user;
         this.book = book;
         this.borrowedAt = LocalDateTime.now();
+        this.dueAt = this.borrowedAt.plusDays(60);
     }
 
     // getters / setters
+    public LocalDateTime getDueAt() { return dueAt; }  // <-- getter
+    public void setDueAt(LocalDateTime dueAt) { this.dueAt = dueAt; } // <-- setter
     public Long getId() { return id; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
@@ -40,4 +49,11 @@ public class BorrowedBook {
     public void setBook(Book book) { this.book = book; }
     public LocalDateTime getBorrowedAt() { return borrowedAt; }
     public void setBorrowedAt(LocalDateTime borrowedAt) { this.borrowedAt = borrowedAt; }
+    public boolean isExtensionUsed() {
+        return extensionUsed;
+    }
+
+    public void setExtensionUsed(boolean extensionUsed) {
+        this.extensionUsed = extensionUsed;
+    }
 }
