@@ -36,7 +36,9 @@ public class BorrowedBookController {
         model.addAttribute("borrowId", borrowed.getId());
         model.addAttribute("imageBase64", imageBase64);
         model.addAttribute("borrowedAt", borrowed.getBorrowedAt()); // data wypożyczenia
-        model.addAttribute("dueAt", borrowed.getBorrowedAt().plusDays(60)); // termin oddania
+        model.addAttribute("dueAt", borrowed.getDueAt()); // faktyczne dueAt z encji
+
+        model.addAttribute("extensionUsed", borrowed.isExtensionUsed());
 
         return "borrowed-book-details"; // Twój HTML z przyciskiem Przedłuż
     }
@@ -53,7 +55,7 @@ public class BorrowedBookController {
                 redirectAttributes.addFlashAttribute("error", "Nie możesz przedłużyć tej książki więcej niż raz.");
             } else {
                 // przedłużenie o 7 dni od obecnego dueAt
-                borrowedBook.setDueAt(borrowedBook.getDueAt().plusDays(7));
+                borrowedBook.setDueAt(borrowedBook.getDueAt().plusDays(60));
                 borrowedBook.setExtensionUsed(true);
                 borrowedRepository.save(borrowedBook);
                 redirectAttributes.addFlashAttribute("success", "Wypożyczenie zostało przedłużone o 7 dni.");

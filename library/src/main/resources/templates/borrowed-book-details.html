@@ -32,6 +32,13 @@
     </div>
 
     <div class="actions">
+    <p th:if="${extensionUsed}" style="color:red;">
+    Książka została już przedłużona. Nie możesz przedłużyć jej ponownie.
+</p>
+<p th:unless="${extensionUsed}">
+    Możesz przedłużyć książkę tylko raz na kolejne 60 dni.
+</p>
+    
         <!-- Przedłużenie książki -->
         <form th:action="@{'/books/extend/' + ${borrowId}}" method="post" style="display:inline;">
             <button type="submit" class="extend">🔄 Przedłuż</button>
