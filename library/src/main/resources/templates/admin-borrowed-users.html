@@ -11,7 +11,10 @@
     <a href="/admin" class="btn btn-secondary mb-3">Powrót do panelu admina</a>
 
     <div th:each="entry : ${borrowedByUser}">
-        <h3 th:text="'Użytkownik: ' + ${entry.key.displayName} + ' (' + ${entry.key.userName} + ')'"></h3>
+        <div class="d-flex align-items-center mb-2">
+            <h3 th:text="'Użytkownik: ' + ${entry.key.displayName} + ' (' + ${entry.key.userName} + ')'"></h3>
+            <a th:href="@{'/contact?userId=' + ${entry.key.id}}" class="btn btn-primary btn-sm ml-3">Wyślij wiadomość</a>
+        </div>
         <table class="table table-bordered table-striped mb-4">
             <thead>
                 <tr>
@@ -25,7 +28,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="borrowedBook : ${entry.value}">
+                <tr th:each="borrowedBook : ${entry.value}"
+                th:class="${T(java.time.LocalDateTime).now().isAfter(borrowedBook.dueAt)} ? 'table-danger' : ''">
                     <td th:text="${borrowedBook.id}"></td>
                     <td th:text="${borrowedBook.book.title}"></td>
                     <td th:text="${borrowedBook.book.author}"></td>
@@ -33,8 +37,8 @@
                     <td th:text="${#temporals.format(borrowedBook.dueAt, 'yyyy-MM-dd')}"></td>
                     <td th:text="${borrowedBook.extensionUsed} ? 'Tak' : 'Nie'"></td>
                     <td>
-				        <a th:href="@{'/admin/approve-return/' + ${borrowedBook.id}}" class="btn btn-success btn-sm">Zatwierdź zwrot</a>
-				    </td>
+                        <a th:href="@{'/admin/approve-return/' + ${borrowedBook.id}}" class="btn btn-success btn-sm">Zatwierdź zwrot</a>
+                    </td>
                 </tr>
             </tbody>
         </table>

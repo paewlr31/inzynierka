@@ -19,6 +19,7 @@
     </style>
 </head>
 <body>
+<div th:replace="fragments :: navbar"></div>
 <div class="container py-4">
     <h1>Kontakt</h1>
 
@@ -26,7 +27,7 @@
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
     <!-- Lista użytkowników dla admina -->
-    <div th:if="${role == 'ADMIN'}">
+    <div th:if="${role == 'ADMIN' and selectedUser == null}">
         <h3>Użytkownicy:</h3>
         <ul>
             <li th:each="u : ${users}">
@@ -39,6 +40,8 @@
     <!-- Chat dla admina -->
     <div th:if="${role == 'ADMIN' and selectedUser != null}">
         <h3 th:text="'Rozmowa z ' + ${selectedUser.displayName}"></h3>
+         <a href="/contact" class="btn btn-secondary mb-3">Wyjdz z rozmowy</a>
+        <a href="/admin/borrowed-users" class="btn btn-secondary mb-3">Przejdz do wypożyczonych książek</a>
         <div id="chatBox">
             <div th:each="msg : ${messages}">
                 <p th:class="${msg.sender.id == currentUser.id} ? 'message-self' : 'message-other'">
@@ -48,7 +51,9 @@
         </div>
         <form id="chatForm" th:action="@{/contact/send}" method="post">
             <input type="hidden" name="receiverId" th:value="${selectedUser.id}"/>
-            <textarea name="content" class="form-control mb-2" placeholder="Napisz wiadomość"></textarea>
+            <textarea name="content" class="form-control mb-2" 
+                      th:text="${param.overdue == 'true'} ? 'Proszę zwrócić książkę, termin minął!' : ''"
+                      placeholder="Napisz wiadomość"></textarea>
             <button type="submit" class="btn btn-primary">Wyślij</button>
         </form>
     </div>
