@@ -37,10 +37,9 @@ return "about";
 }
 
 
-@GetMapping("/contact")
-public String contact() {
-return "contact";
-}
+/*
+ * @GetMapping("/contact") public String contact() { return "contact"; }
+ */
 
 
 /*

@@ -1,20 +1,118 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="UTF-8">
+    <title>Kontakt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #chatBox {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 400px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+        }
+        .message-self { text-align: right; color: blue; }
+        .message-other { text-align: left; color: green; }
+    </style>
 </head>
 <body>
-<div th:replace="fragments :: navbar"></div>
-<main class="container py-4">
-<h1>Contact</h1>
-<p>Tu będzie contact do biblioteki</p>
-</main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<div class="container py-4">
+    <h1>Kontakt</h1>
+
+    <!-- Wyświetlanie błędów -->
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+    <!-- Lista użytkowników dla admina -->
+    <div th:if="${role == 'ADMIN'}">
+        <h3>Użytkownicy:</h3>
+        <ul>
+            <li th:each="u : ${users}">
+                <a th:href="@{'/contact?userId=' + ${u.id}}" th:text="${u.displayName}"></a>
+            </li>
+            <li th:if="${users.isEmpty()}">Brak użytkowników</li>
+        </ul>
+    </div>
+
+    <!-- Chat dla admina -->
+    <div th:if="${role == 'ADMIN' and selectedUser != null}">
+        <h3 th:text="'Rozmowa z ' + ${selectedUser.displayName}"></h3>
+        <div id="chatBox">
+            <div th:each="msg : ${messages}">
+                <p th:class="${msg.sender.id == currentUser.id} ? 'message-self' : 'message-other'">
+                    <b th:text="${msg.sender.displayName}"></b>: <span th:text="${msg.content}"></span>
+                </p>
+            </div>
+        </div>
+        <form id="chatForm" th:action="@{/contact/send}" method="post">
+            <input type="hidden" name="receiverId" th:value="${selectedUser.id}"/>
+            <textarea name="content" class="form-control mb-2" placeholder="Napisz wiadomość"></textarea>
+            <button type="submit" class="btn btn-primary">Wyślij</button>
+        </form>
+    </div>
+
+    <!-- Chat dla użytkownika -->
+    <div th:if="${role != 'ADMIN' and admin != null}">
+        <h3>Rozmowa z administratorem</h3>
+        <div id="chatBox">
+            <div th:each="msg : ${messages}">
+                <p th:class="${msg.sender.id == currentUser.id} ? 'message-self' : 'message-other'">
+                    <b th:text="${msg.sender.displayName}"></b>: <span th:text="${msg.content}"></span>
+                </p>
+            </div>
+        </div>
+        <form id="chatForm" th:action="@{/contact/send}" method="post">
+            <input type="hidden" name="receiverId" th:value="${admin.id}"/>
+            <textarea name="content" class="form-control mb-2" placeholder="Napisz wiadomość"></textarea>
+            <button type="submit" class="btn btn-primary">Wyślij</button>
+        </form>
+    </div>
+
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        const currentUser = /*[[${currentUser.displayName}]]*/ 'USER';
+        const receiverId = $("input[name='receiverId']").val();
+
+        function fetchMessages() {
+            if (!receiverId) return;
+            $.get("/contact/messages/" + receiverId, function(data) {
+                const chatBox = $("#chatBox");
+                chatBox.empty();
+                data.forEach(msg => {
+                    const cls = msg.sender === currentUser ? 'message-self' : 'message-other';
+                    chatBox.append(`<p class="${cls}"><b>${msg.sender}:</b> ${msg.content}</p>`);
+                });
+                chatBox.scrollTop(chatBox[0].scrollHeight);
+            }).fail(function() {
+                console.error("Failed to fetch messages");
+            });
+        }
+
+        if (receiverId) {
+            setInterval(fetchMessages, 1000);
+            fetchMessages();
+        }
+
+        $("#chatForm").submit(function(e) {
+            e.preventDefault();
+            const form = $(this);
+            const content = form.find("textarea").val().trim();
+            if (!content) {
+                alert("Wiadomość nie może być pusta!");
+                return;
+            }
+            $.post(form.attr("action"), form.serialize(), function() {
+                form.find("textarea").val("");
+                fetchMessages();
+            }).fail(function() {
+                alert("Błąd podczas wysyłania wiadomości!");
+            });
+        });
+    });
+</script>
 </body>
 </html>
