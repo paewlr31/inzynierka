@@ -13,10 +13,10 @@ import java.util.Collections;
 public class MainController {
 
 
-@GetMapping("/")
-public String index() {
-return "index"; // src/main/resources/templates/index.html
-}
+	/*
+	 * @GetMapping("/") public String index() { return "index"; //
+	 * src/main/resources/templates/index.html }
+	 */
 
 
 /*

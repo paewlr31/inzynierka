@@ -1,6 +1,7 @@
 package com.example.library.repository;
 
 import com.example.library.models.Book;
+import com.example.library.models.Genre;
 
 import java.util.List;
 
@@ -11,4 +12,13 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // List<Book> findByTitleContainingIgnoreCase(String title);
 	List<Book> findAllByOrderByCreatedAtAsc();   // najstarsze pierwsze
     List<Book> findAllByOrderByCreatedAtDesc();  // najnowsze pierwsze
+    
+    List<Book> findByTitleContainingIgnoreCase(String title);
+    List<Book> findByAuthorContainingIgnoreCase(String author);
+    List<Book> findByGenre(Genre genre);
+
+    List<Book> findByYear(Integer year);
+
+    List<Book> findAllByOrderByTitleAsc();
+    List<Book> findTop15ByOrderByCreatedAtDesc();
 }
