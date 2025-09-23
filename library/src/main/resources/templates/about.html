@@ -1,18 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
-<link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>About</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
 <div th:replace="fragments :: navbar"></div>
-<main class="container py-4">
-<h1>About</h1>
-<p>Tu będzie opis biblioteki (np. lista wypożyczonych książek).</p>
+
+<main class="container py-5">
+
+    <!-- Nagłówek -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">O Bibliotece</h1>
+        <p class="lead text-muted">Miejsce, w którym literatura spotyka się z technologią</p>
+    </div>
+
+    <!-- Opis + zdjęcie -->
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <img src="https://lh3.googleusercontent.com/p/AF1QipP5RpCKiqj-w2obD--FiKna1_VYbCLoH0bi7_lj=s1360-w1360-h1020-rw" 
+                 alt="Zdjęcie biblioteki" class="img-fluid rounded shadow">
+        </div>
+        <div class="col-md-6">
+            <h2>Kim jesteśmy?</h2>
+            <p>
+                Nasza biblioteka to przestrzeń, w której każdy znajdzie coś dla siebie – 
+                od klasyki literatury, przez nowości wydawnicze, aż po książki naukowe i specjalistyczne.
+                Oferujemy nowoczesny system rezerwacji online oraz przyjazną atmosferę sprzyjającą czytaniu i nauce.
+            </p>
+            <p>
+                Zostań częścią naszej społeczności i odkryj, jak łatwo można połączyć tradycję czytelnictwa
+                z nowoczesnymi technologiami.
+            </p>
+        </div>
+    </div>
+
+    <!-- Regulamin / kontrakt -->
+    <section class="mb-5">
+        <h2 class="mb-3">Regulamin korzystania z biblioteki</h2>
+        <ul class="list-group">
+            <li class="list-group-item">📖 Książki można wypożyczać maksymalnie na okres <strong>60 dni (mozliwośc przedłuzenia o kolejne 60)</strong>.</li>
+            <li class="list-group-item">⏰ Opóźnienia w zwrocie wiążą się z naliczeniem kary administracyjnej.</li>
+            <li class="list-group-item">💳 Każdy użytkownik zobowiązany jest posiadać ważną kartę biblioteczną.</li>
+            <li class="list-group-item">🔄 Rezerwacji książek można dokonać wyłącznie online.</li>
+            <li class="list-group-item">📂 Biblioteka zastrzega sobie prawo do odmowy wypożyczenia w szczególnych przypadkach.</li>
+        </ul>
+    </section>
+
+    <!-- Dane kontaktowe -->
+    <section class="bg-light p-4 rounded shadow-sm">
+        <h2 class="mb-3">Kontakt</h2>
+        <p><strong>📍 Adres:</strong> ul. Książkowa 12, 00-123 Warszawa</p>
+        <p><strong>📞 Telefon:</strong> +48 123 456 789</p>
+        <p><strong>✉️ E-mail:</strong> kontakt@biblioteka.pl</p>
+        <p><strong>⏰ Godziny otwarcia:</strong> Pon-Pt 9:00 – 18:00</p>
+    </section>
+
 </main>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>

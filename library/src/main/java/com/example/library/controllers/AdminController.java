@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -213,13 +214,29 @@ public class AdminController {
     }
 
     @PostMapping("/admin/delete-user/{id}")
-    public String deleteUser(@PathVariable Long id, HttpSession session) {
+    public String deleteUser(@PathVariable Long id,
+                             HttpSession session,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
         String role = (String) session.getAttribute("role");
         if (!"ADMIN".equals(role)) return "redirect:/";
 
-        userService.deleteById(id); // metoda do zaimplementowania w UserService
+        // sprawdzamy, czy użytkownik ma wypożyczone książki
+        long borrowedCount = borrowedRepository.countByUserId(id);
+        if (borrowedCount > 0) {
+            User user = userService.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Nie znaleziono użytkownika"));
+            model.addAttribute("user", user);
+            model.addAttribute("error", "Nie można usunąć użytkownika, ponieważ ma wypożyczone książki.");
+            return "delete-user"; // zostajemy na stronie potwierdzenia
+        }
+
+        userService.deleteById(id);
+        redirectAttributes.addFlashAttribute("success", "Użytkownik został usunięty.");
         return "redirect:/admin/users";
     }
+
+
     
     @GetMapping("/admin/borrowed-users")
     public String borrowedUsers(Model model) {

@@ -14,5 +14,12 @@
         <a href="/admin/users" class="btn btn-secondary">Anuluj</a>
     </form>
 </div>
+
+<div class="container mt-3">
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+    <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+</div>
+
+
 </body>
 </html>

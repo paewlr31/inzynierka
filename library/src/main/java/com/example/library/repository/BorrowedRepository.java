@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface BorrowedRepository extends JpaRepository<BorrowedBook, Long> {
     List<BorrowedBook> findByUser(User user);
+    long countByUserId(Long userId);
 }
 
 
