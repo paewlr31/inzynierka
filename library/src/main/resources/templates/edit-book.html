@@ -1,55 +1,147 @@
-<form th:action="@{/admin/edit-book}" th:object="${book}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:field="*{id}"/>
+<style>
+    body {
+        background-color: #f5f5f5;
+        font-family: Arial, sans-serif;
+    }
 
-    <div class="form-group">
-        <label>Tytuł</label>
-        <input type="text" th:field="*{title}" class="form-control" required/>
-    </div>
+    .form-container {
+        width: 650px;
+        margin: 60px auto;
+        padding: 25px;
+        border: 2px solid #000;
+        background-color: #fff;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.2);
+    }
 
-    <div class="form-group">
-        <label>Autor</label>
-        <input type="text" th:field="*{author}" class="form-control" required/>
-    </div>
+    .form-container h1 {
+        text-align: center;
+        color: #ab0a0a;
+        margin-bottom: 25px;
+    }
 
-    <div class="form-group">
-        <label>Ilość</label>
-        <input type="number" th:field="*{quantity}" class="form-control" required/>
-    </div>
+    .form-group {
+        margin-bottom: 18px;
+    }
 
-    <div class="form-group">
-        <label>Rok wydania</label>
-        <input type="number" th:field="*{year}" class="form-control"/>
-    </div>
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+    }
 
-    <div class="form-group">
-        <label>Opis</label>
-        <textarea th:field="*{description}" class="form-control" rows="4"></textarea>
-    </div>
-	
-	<div class="form-group">
-	    <label>Gatunek</label>
-	    <select th:field="*{genre}" class="form-control" required>
-	        <option value="">-- Wybierz gatunek --</option>
-	        <option th:each="g : ${T(com.example.library.models.Genre).values()}"
-	                th:value="${g}"
-	                th:text="${g}">
-	        </option>
-	    </select>
-	</div>
-	
-	
-    <div class="form-group">
-        <label>Zdjęcie</label>
-        <input type="file" name="imageFile" class="form-control"/>
-  		
-        
-    </div>
-    
-    <div th:if="${imageBase64 != null}">
-	    <img th:src="'data:image/png;base64,' + ${imageBase64}" style="width:150px;" alt="Obecne zdjęcie"/>
-	</div>
-    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #000;
+        border-radius: 3px;
+        font-size: 14px;
+    }
 
-    <button type="submit" class="btn btn-primary mt-2">Zapisz</button>
-</form>
+    .form-group textarea {
+        resize: none;
+    }
 
+    .form-group input[type="file"] {
+        border: none;
+        padding-left: 0;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background-color: #ab0a0a;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-bottom: 10px;
+    }
+
+    .submit-btn:hover {
+        background-color: #ff0000;
+    }
+
+    .return-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background-color: #ab0a0a;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .return-btn:hover {
+        background-color: #ff0000;
+    }
+
+    .preview-img {
+        display: block;
+        margin-top: 10px;
+        max-width: 150px;
+        border: 1px solid #ccc;
+        padding: 3px;
+    }
+</style>
+
+<div class="form-container">
+    <h1>✏️ Edytuj książkę</h1>
+
+    <form th:action="@{/admin/edit-book}" th:object="${book}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}"/>
+
+        <div class="form-group">
+            <label for="title">Tytuł</label>
+            <input id="title" type="text" th:field="*{title}" placeholder="Wpisz tytuł książki" required />
+        </div>
+
+        <div class="form-group">
+            <label for="author">Autor</label>
+            <input id="author" type="text" th:field="*{author}" placeholder="Imię i nazwisko autora" required />
+        </div>
+
+        <div class="form-group">
+            <label for="quantity">Ilość egzemplarzy</label>
+            <input id="quantity" type="number" min="1" th:field="*{quantity}" placeholder="Podaj ilość" required />
+        </div>
+
+        <div class="form-group">
+            <label for="year">Rok wydania</label>
+            <input id="year" type="number" th:field="*{year}" placeholder="Np. 2020" />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Opis</label>
+            <textarea id="description" th:field="*{description}" rows="4" placeholder="Krótki opis książki"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="genre">Rodzaj książki (Genre)</label>
+            <select id="genre" th:field="*{genre}" required>
+                <option value="">-- Wybierz gatunek --</option>
+                <option th:each="g : ${T(com.example.library.models.Genre).values()}"
+                        th:value="${g}"
+                        th:text="${g}">
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="imageFile">Okładka (zdjęcie)</label>
+            <input id="imageFile" type="file" name="imageFile" />
+        </div>
+
+        <div th:if="${imageBase64 != null}">
+            <img th:src="'data:image/png;base64,' + ${imageBase64}" class="preview-img" alt="Obecne zdjęcie"/>
+        </div>
+
+        <button type="submit" class="submit-btn">💾 Zapisz zmiany</button>
+        <button type="button" class="return-btn" onclick="window.location.href='/admin'">Anuluj</button>
+    </form>
+</div>

@@ -37,6 +37,13 @@
                 <p><strong>Data dodania:</strong> 
 				   <span th:text="${#temporals.format(book.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span>
 				</p>
+				
+				 <p>
+                      <span th:if="${book.quantity == 0}" style="color:red; margin-left:10px;">
+				        Brak dostępnych egzemplarzy
+				    </span>
+                    </p>
+				
                 <a th:href="@{'/admin/edit-book/' + ${book.id}}" class="btn btn-primary btn-sm">Edytuj</a>
                 <a th:href="@{'/admin/delete-book/' + ${book.id}}" class="btn btn-danger btn-sm">Usuń</a>
             </div>
